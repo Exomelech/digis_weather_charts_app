@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const slice = createSlice({
-  name: 'weather',
+  name: 'chart',
   initialState: {
     searchResult: {},
     searchPending: false,
@@ -30,13 +30,14 @@ const convertResponse = data => {
     country: data.city.country,
     chartData: []
   };
-  data.list.map( el => 
+  data.list.map( el => {
+    let date = new Date(el.dt_txt);
     ret.chartData.push({
       time: el.dt_txt.slice(-8, -3),
-      date: el.dt_txt.slice(5, 10),
+      date: date.toLocaleString('en-us', { month: 'short', day: 'numeric'}),
       temp: Math.round(el.main.temp)
     })
-  );
+  });
   return ret;
 };
 
@@ -49,16 +50,15 @@ const getWeatherAsync = async (city, dispatch) => {
       dispatch(setSearchStatus('ok'));
       const json = await response.json();
       const searchData = convertResponse(json);
-      console.log(searchData);
       dispatch(updateSearchResult(searchData));
     }else{
       dispatch(setSearchStatus('error'));
-    };
+    }
     dispatch(switchPenging(false));
   } catch (error) {
     dispatch(setSearchStatus('error'));
     dispatch(switchPenging(false));
-  };
+  }
 };
 
 export const searchWeather = city => dispatch => {
@@ -66,8 +66,8 @@ export const searchWeather = city => dispatch => {
   getWeatherAsync(city, dispatch);
 };
 
-export const selectWeather = state => state.weather.searchResult;
-export const selectStatus = state => state.weather.searchStatus;
-export const selectPending = state => state.weather.searchPending;
+export const selectWeather = state => state.chart.searchResult;
+export const selectStatus = state => state.chart.searchStatus;
+export const selectPending = state => state.chart.searchPending;
 
 export default slice.reducer;

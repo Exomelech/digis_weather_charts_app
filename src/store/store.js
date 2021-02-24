@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import weatherReducer from './reducers/weatherSlice';
+import chartReducer from './reducers/chartSlice';
 
 export default configureStore({
   reducer: {
-    weather: weatherReducer
+    chart: chartReducer
   }
 });

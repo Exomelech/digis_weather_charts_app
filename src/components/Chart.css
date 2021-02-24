@@ -3,3 +3,17 @@
   flex-direction: column;
   align-items: center;
 }
+
+.chart-box__custom-tooltip {
+  height: auto;
+  padding: 2px;
+  width: auto;
+  text-align: center;
+  background-color: honeydew;
+  border-radius: 2px;
+}
+
+.custom-tooltip__label {
+  padding: 0;
+  margin: 0;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { searchWeather, selectPending, selectStatus } from '../store/reducers/weatherSlice';
+import { searchWeather, selectPending, selectStatus } from '../store/reducers/chartSlice';
 import './Search.css';
 
 export const Search = () => {
@@ -9,15 +9,17 @@ export const Search = () => {
   const status = useSelector( selectStatus );
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState('');
+  const [lastSearchInput, setLastSearchInput] = useState('');
 
   const onInputChange = e => {
     setSearchInput(e.target.value);
   };
 
   const onSubmit = () => {
-    if( !pending ){
+    if( !pending && searchInput !== lastSearchInput ){
+      setLastSearchInput(searchInput);
       dispatch( searchWeather(searchInput) );
-    };
+    }
   };
 
   return(
