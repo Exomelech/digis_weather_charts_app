@@ -4,59 +4,70 @@ export const slice = createSlice({
   name: 'weather',
   initialState: {
     searchResult: {},
-    searchPending: false
+    searchPending: false,
+    searchStatus: 'none'
   },
   reducers: {
     updateSearchResult: (state, action) => {
-      //state.value += 1;
+      state.searchResult = action.payload;
     },
     switchPenging: (state, action) => {
-      //let newState = action.payload || !state.searchPending;
       state.searchPending = action.payload;
+    },
+    setSearchStatus: (state, action) => {
+      state.searchStatus = action.payload;
     }
   },
 });
 
-const { updateSearchResult, switchPenging } = slice.actions;
-
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched
-
-//api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
+const { updateSearchResult, switchPenging, setSearchStatus } = slice.actions;
 
 const APIKey = "f89b35f3f735ea1c3e009a36f1f3b7cf";
 
+const convertResponse = data => {
+  let ret = {
+    city: data.city.name,
+    country: data.city.country,
+    chartData: []
+  };
+  data.list.map( el => 
+    ret.chartData.push({
+      time: el.dt_txt.slice(-8, -3),
+      date: el.dt_txt.slice(5, 10),
+      temp: Math.round(el.main.temp)
+    })
+  );
+  return ret;
+};
+
 const getWeatherAsync = async (city, dispatch) => {
   try {
-    const response = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${APIKey}`, {
+    const response = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${APIKey}`, {
       method: 'POST'
     });
-    if( response.status === 200 ){
+    if( response.ok ){
+      dispatch(setSearchStatus('ok'));
       const json = await response.json();
-      console.log( json );
+      const searchData = convertResponse(json);
+      console.log(searchData);
+      dispatch(updateSearchResult(searchData));
     }else{
-      //console.log( response );
+      dispatch(setSearchStatus('error'));
     };
     dispatch(switchPenging(false));
   } catch (error) {
-    console.warn(`getWeatherAsync error: ${error}`);
+    dispatch(setSearchStatus('error'));
+    dispatch(switchPenging(false));
   };
 };
 
 export const searchWeather = city => dispatch => {
   dispatch(switchPenging(true));
-  console.log( city, 'searchWeather' );
   getWeatherAsync(city, dispatch);
-  //setTimeout(() => {
-  //  dispatch(switchPenging(false));
-  //}, 10000);
 };
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.counter.value)`
 export const selectWeather = state => state.weather.searchResult;
+export const selectStatus = state => state.weather.searchStatus;
+export const selectPending = state => state.weather.searchPending;
 
 export default slice.reducer;

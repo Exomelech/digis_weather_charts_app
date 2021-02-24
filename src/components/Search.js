@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { searchWeather } from '../store/reducers/weatherSlice';
-import { SearchResult } from './SearchResult';
+import { searchWeather, selectPending, selectStatus } from '../store/reducers/weatherSlice';
 import './Search.css';
 
 export const Search = () => {
 
-  const pending = useSelector( state => state.weather.searchPending );
+  const pending = useSelector( selectPending );
+  const status = useSelector( selectStatus );
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState('');
 
@@ -15,7 +15,6 @@ export const Search = () => {
   };
 
   const onSubmit = () => {
-    //console.log(pending)
     if( !pending ){
       dispatch( searchWeather(searchInput) );
     };
@@ -37,7 +36,11 @@ export const Search = () => {
           search
         </button>
       </div>
-      {/* <SearchResult /> */}
+      { status === 'error' 
+        ? 
+        <div className="search-box__error">No city was found, try again</div>
+        : <></>
+      }
     </div>
   );
 
