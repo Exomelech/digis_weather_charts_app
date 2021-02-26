@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import './Chart.css';
 import { useSelector } from 'react-redux';

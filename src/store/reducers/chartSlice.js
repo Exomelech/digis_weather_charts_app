@@ -25,7 +25,7 @@ const { updateSearchResult, switchPenging, setSearchStatus } = slice.actions;
 const APIKey = "f89b35f3f735ea1c3e009a36f1f3b7cf";
 
 const convertResponse = data => {
-  let ret = {
+  let ret =    {
     city: data.city.name,
     country: data.city.country,
     chartData: []
