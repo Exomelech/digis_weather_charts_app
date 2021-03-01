@@ -2,11 +2,9 @@ import React from 'react';
 import { Search } from './components/Search';
 import { Chart } from './components/Chart';
 
-export const App = () =>  {
-  return (
-    <div className="App">
-      <Search />
-      <Chart />
-    </div>
-  );
-};
+export const App = () => (
+  <div className="App">
+    <Search />
+    <Chart />
+  </div>
+);

@@ -4,25 +4,24 @@ import { searchWeather, selectPending, selectStatus } from '../store/reducers/ch
 import './Search.css';
 
 export const Search = () => {
-
-  const pending = useSelector( selectPending );
-  const status = useSelector( selectStatus );
+  const pending = useSelector(selectPending);
+  const status = useSelector(selectStatus);
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState('');
   const [lastSearchInput, setLastSearchInput] = useState('');
 
-  const onInputChange = e => {
+  const onInputChange = (e) => {
     setSearchInput(e.target.value);
   };
 
   const onSubmit = () => {
-    if( !pending && searchInput !== lastSearchInput ){
+    if (!pending && searchInput !== lastSearchInput) {
       setLastSearchInput(searchInput);
-      dispatch( searchWeather(searchInput) );
+      dispatch(searchWeather(searchInput));
     }
   };
 
-  return(
+  return (
     <div className="search-box">
       <div className="search-box__title">Weather forecast app</div>
       <div className="search-box__input-container">
@@ -31,19 +30,19 @@ export const Search = () => {
           value={searchInput}
           onChange={onInputChange}
           placeholder="City"
-          onSubmit={onSubmit}/>
+          onSubmit={onSubmit}
+        />
         <button
+          type="button"
           className="search-box__button"
-          onClick={onSubmit}>
+          onClick={onSubmit}
+        >
           search
         </button>
       </div>
-      { status === 'error' 
-        ? 
-        <div className="search-box__error">No city was found, try again</div>
-        : <></>
-      }
+      { status === 'error'
+        ? <div className="search-box__error">No city was found, try again</div>
+        : <></>}
     </div>
   );
-
 };
