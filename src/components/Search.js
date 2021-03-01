@@ -21,6 +21,10 @@ export const Search = () => {
     }
   };
 
+  const inputOnSubmit = (e) => {
+    if (e.key === 'Enter') onSubmit();
+  };
+
   return (
     <div className="search-box">
       <div className="search-box__title">Weather forecast app</div>
@@ -30,7 +34,7 @@ export const Search = () => {
           value={searchInput}
           onChange={onInputChange}
           placeholder="City"
-          onSubmit={onSubmit}
+          onKeyDown={inputOnSubmit}
         />
         <button
           type="button"
